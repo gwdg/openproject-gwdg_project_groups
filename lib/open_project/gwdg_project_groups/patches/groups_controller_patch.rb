@@ -7,7 +7,7 @@ module OpenProject::GwdgProjectGroups
 
           include InstanceMethods
 
-          alias_method_chain :index, :project_groups
+          alias_method_chain :index, :gwdg_project_groups
         end
       end
 
@@ -16,12 +16,17 @@ module OpenProject::GwdgProjectGroups
         # XXX Breaks method chain
         def index_with_gwdg_project_groups
           
-          #Original one from the plugin:
+          # From the plugin
           #@groups = Group.global_only.find(:all, :order => 'lastname')
-          #Original one from chiliproject:
+          
+          # From ChiliProject
           #@groups = Group.find(:all, :order => 'lastname')
-          @groups = Group.order('lastname ASC').all
+          
+          # From OpenProject
+          #@groups = Group.order('lastname ASC').all
       
+          @groups = Group.global_only.order('lastname ASC').all
+          
           respond_to do |format|
             format.html # index.html.erb
             format.xml  { render xml: @groups }

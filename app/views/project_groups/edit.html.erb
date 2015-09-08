@@ -1,0 +1,9 @@
+<h2>
+  <%= link_to_project_settings(@project) %> &#187;
+  <%= l :label_group_plural %> &#187;
+  <%= h @project_group %>
+</h2>
+
+<%= render_tabs project_group_settings_tabs %>
+
+<% html_title(l(:label_group), @project_group, @project) -%>

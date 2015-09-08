@@ -1,0 +1,14 @@
+<%#
+  needs locals:
+  :f => labelled form builder
+%>
+
+<%= error_messages_for :project_group %>
+
+<section class="form--section">
+  <div class="form--field">
+    <%= f.text_field :lastname, :label => Group.human_attribute_name(:name), :required => true %>
+  </div>
+
+  <%= render partial: 'customizable/form', locals: { form: f } %>
+</section>

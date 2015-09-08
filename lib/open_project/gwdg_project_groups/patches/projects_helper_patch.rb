@@ -7,7 +7,7 @@ module OpenProject::GwdgProjectGroups
 
           include InstanceMethods
 
-          alias_method_chain :index, :gwdg_project_groups
+          alias_method_chain :project_settings_tabs, :gwdg_project_groups
         end
       end
 
@@ -20,6 +20,7 @@ module OpenProject::GwdgProjectGroups
                        :action => :manage_project_groups,
                        :partial => 'projects/settings/project_groups',
                        :label => :label_group_plural})
+            #tabs.push({ name: 'project_groups', action: :manage_project_groups, partial: 'projects/settings/project_groups', label: :label_group_plural })
           end
           tabs
         end

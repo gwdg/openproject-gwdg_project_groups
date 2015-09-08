@@ -1,16 +1,49 @@
-<%= javascript_include_tag "members_form.js" %>
+<%#-- copyright
+OpenProject is a project management system.
+Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
 
-<% roles = Role.find_all_givable
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See doc/COPYRIGHT.rdoc for more details.
+
+++#%>
+<%= javascript_include_tag "members_form.js" %>
+<%
+   roles ||= load_roles(@project)
+   principals_available ||= load_principals(@project)
+   @members ||= load_members(@project)
+%>
+
+<%= error_messages_for 'member' %>
+<% #roles = Role.find_all_givable
    # Check if there is at least one principal that can be added to the project
-   principals_available = @project.possible_members("", 1)
+   #principals_available = @project.possible_members("", 1)
    member_per_page = 20
 
-   @members = @project.member_principals.includes(:roles, :principal, :member_roles)
-                                        .order(User::USER_FORMATS_STRUCTURE[Setting.user_format].map{|attr| attr.to_s}.join(", "))
-                                        .page(params[:page])
-                                        .per_page(per_page_param)
+   #@members = @project.member_principals.includes(:roles, :principal, :member_roles)
+   #                                     .order(User::USER_FORMATS_STRUCTURE[Setting.user_format].map{|attr| attr.to_s}.join(", "))
+   #                                     .page(params[:page])
+   #                                     .per_page(per_page_param)
 %>
-<%= error_messages_for 'member' %>
 <div>
   <% if roles.any? && principals_available.any? %>
     <%= render :partial => "members/member_form",

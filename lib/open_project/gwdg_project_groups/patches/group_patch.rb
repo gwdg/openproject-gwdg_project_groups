@@ -5,9 +5,9 @@ module OpenProject::GwdgProjectGroups
         base.class_eval do
           unloadable
 
-          named_scope :global_only, :conditions => {:type => 'Group'}
+          scope :global_only, :conditions => {:type => 'Group'}
   
-          @validate_callbacks.reject! do |c|
+          _validate_callbacks.reject! do |c|
             begin
               if Proc === c.method && eval("attrs", c.method.binding).first == :lastname && c.options[:case_sensitive] == false
                 true

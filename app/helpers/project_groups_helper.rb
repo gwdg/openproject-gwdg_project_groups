@@ -2,7 +2,7 @@
 
 require_dependency 'projects_helper'
 
-module GwdgProjectGroupsHelper
+module ProjectGroupsHelper
 
   # Generate link to a given project's settings
   # @param project [Project]
@@ -38,11 +38,24 @@ module GwdgProjectGroupsHelper
   end
 
   def load_members(project)
-    project.member_principals.find(:all, :include => [:roles, :principal]).sort
+    # In chiliProject
+    #project.member_principals.find(:all, :include => [:roles, :principal]).sort
+    
+    # In OpenProject
+    @project.member_principals.includes(:roles, :principal, :member_roles)
+                                        .order(User::USER_FORMATS_STRUCTURE[Setting.user_format].map{|attr| attr.to_s}.join(", "))
+                                        .page(params[:page])
+                                        .per_page(per_page_param)
   end
 
   def load_principals(project)
-    principals = Principal.active.find(:all, :limit => 100, :order => 'type, login, lastname ASC') - project.principals
+    # In ChiliProject
+    #principals = Principal.active.find(:all, :limit => 100, :order => 'type, login, lastname ASC') - project.principals
+    
+    #In OpenProject
+    principals = @project.possible_members("", 1)
+    
+    # Plus patch
     project.project_groups - project.principals + principals
   end
 
