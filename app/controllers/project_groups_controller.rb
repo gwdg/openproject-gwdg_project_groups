@@ -19,7 +19,7 @@ class ProjectGroupsController < ApplicationController
   end
 
   def create
-    @project_group = ProjectGroup.new permitted_params.project_group
+    @project_group = ProjectGroup.new(:lastname => params[:project_group][:lastname])
     @project_group.parent_project = @project
     @project_group.projects << @project #TODO this could be handled by model on create
     respond_to do |format|
@@ -37,7 +37,7 @@ class ProjectGroupsController < ApplicationController
 
   def update
     respond_to do |format|
-      if @project_group.update_attributes(params[:project_group])
+      if @project_group.update_attributes(:lastname => params[:project_group][:lastname])
         flash[:notice] = l(:notice_successful_update)
         format.html { redirect_to edit_project_group_url(@project, @project_group) }
         format.xml { head :ok }
@@ -85,6 +85,11 @@ class ProjectGroupsController < ApplicationController
     end
   end
 
+  def autocomplete_for_user
+    @users_not_in_group = User.active.not_in_group(@project_group).like(params[:q]).all(limit: 100)
+    render layout: false
+  end
+
   protected
 
   # Loads users not present in the group
@@ -99,4 +104,5 @@ class ProjectGroupsController < ApplicationController
     end
     true
   end
+  
 end

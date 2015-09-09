@@ -27,17 +27,13 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<%#
-  needs locals:
-  :f => labelled form builder
-%>
-
-<%= error_messages_for :project_group %>
-
-<section class="form--section">
-  <div class="form--field">
-    <%= f.text_field :lastname, :label => ProjectGroup.human_attribute_name(:name), :required => true %>
-  </div>
-
-  <%= render partial: 'customizable/form', locals: { form: f } %>
-</section>
+<% if @membership.valid? %>
+  <% content = escape_javascript render(partial: 'memberships') %>
+  <% flash_message = escape_javascript render(partial: "members/common_notice",
+                                              locals: { message: l(:notice_successful_update) }) %>
+  jQuery('#tab-content-memberships').html('<%= content %>');
+  jQuery('#tab-content-memberships').prepend('<%= flash_message %>');
+  jQuery('#member-<%= @membership.id %>').effect("highlight", {}, 2000);
+<% else %>
+  alert('<%= escape_javascript(l(:notice_failed_to_save_members, :errors => @membership.errors.full_messages.join(', '))).html_safe %>');
+<% end %>

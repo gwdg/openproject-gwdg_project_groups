@@ -27,17 +27,7 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<%#
-  needs locals:
-  :f => labelled form builder
-%>
-
-<%= error_messages_for :project_group %>
-
-<section class="form--section">
-  <div class="form--field">
-    <%= f.text_field :lastname, :label => ProjectGroup.human_attribute_name(:name), :required => true %>
-  </div>
-
-  <%= render partial: 'customizable/form', locals: { form: f } %>
-</section>
+jQuery('#tab-content-users').html("<%= escape_javascript render(:partial => 'project_groups/users') %>")
+<% @users.each do |user| %>
+  jQuery('#user-<%= user.id %>').effect("highlight", {}, 2000);
+<% end if @users.present? %>

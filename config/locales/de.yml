@@ -1,4 +1,6 @@
 de:
   label_project_group: "Projektgruppen"
   field_name: "Name"
+  label_group: "Grouppe"
+  label_project: "Projekt"
   

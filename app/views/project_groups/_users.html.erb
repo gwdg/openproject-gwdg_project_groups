@@ -1,50 +1,87 @@
-<div class="splitcontentleft">
-  <% if @project_group.users.any? %>
+<%#-- copyright
+OpenProject is a project management system.
+Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See doc/COPYRIGHT.rdoc for more details.
+
+++#%>
+
+<div class="grid-block">
+  <div class="grid-content">
+    <% if @project_group.users.any? %>
       <table class="list users">
         <thead>
-        <tr>
-          <th><%= l(:label_user) %></th>
-          <th style="width:15%"></th>
-        </tr>
+          <tr>
+            <th><%= User.model_name.human %></th>
+            <th style="width:15%"></th>
+          </tr>
         </thead>
         <tbody>
-        <% @project_group.users.sort.each do |user| %>
+          <% @project_group.users.sort.each do |user| %>
             <tr id="user-<%= user.id %>" class="<%= cycle 'odd', 'even' %>">
               <td class="user"><%= link_to_user user %></td>
               <td class="buttons">
-                <%= link_to_remote l(:button_delete),
-                                   :url => remove_user_project_group_path(@project, @project_group, :user_id => user),
-                                   :html => {:class => 'icon icon-del'} %>
+                <%= link_to l(:button_delete), remove_user_project_group_path(@project, @project_group, :user_id => user ),
+                                           :method => :post,
+                                           :remote => :true,
+                                           :class => 'icon icon-delete' %>
               </td>
             </tr>
-        <% end %>
+          <% end %>
         </tbody>
       </table>
-  <% else %>
+    <% else %>
       <p class="nodata"><%= l(:label_no_data) %></p>
-  <% end %>
-</div>
+    <% end %>
+  </div>
+  <div class="grid-content">
 
-<div class="splitcontentright">
-  <% if @users_not_in_group.any? %>
-      <% remote_form_for(:project_group, @project_group, :url => add_users_project_group_path(@project, @project_group)) do |f| %>
-          <fieldset>
-            <legend><%= l(:label_user_new) %></legend>
-            <p><%= label_tag "user_search", l(:label_user_search) %><%= text_field_tag 'user_search', nil %></p>
+    <% if @users_not_in_group.any? %>
+      <%= styled_form_tag(add_users_project_group_path(@project, @project_group), :remote => true) do |f| %>
+        <fieldset class="form--fieldset">
+          <legend class="form--fieldset-legend"><%=l(:label_user_new)%></legend>
+          <div class="form--field -vertical">
+            <%= styled_label_tag "user_search", l(:label_user_search) %>
+            <div class="form--field-container">
+              <%= styled_text_field_tag 'user_search', nil %>
+            </div>
+          </div>
+          <div class="form--field -vertical">
             <%= observe_field(:user_search,
-                              :frequency => 0.5,
-                              :update => :users,
-                              :url => auto_complete_users_path(:remove_group_members => @project_group),
-                              :with => 'q')
-            %>
-
-            <div id="users">
+                          :frequency => 0.5,
+                          :update => :users,
+                          :url => { :controller => '/project_groups', :action => 'autocomplete_for_user', :id => @project_group },
+                          :with => 'q',
+                          :method => :get)
+                      %>
+            <div id="users" class="form--field-container -vertical">
               <%= principals_check_box_tags 'user_ids[]', @users_not_in_group %>
             </div>
-
-            <p><%= submit_tag l(:button_add) %></p>
-          </fieldset>
+          </div>
+          <div><%= styled_button_tag l(:button_add), class: '-highlight -with-icon icon-yes' %></div>
+        </fieldset>
       <% end %>
-  <% end %>
-
+    <% end %>
+  </div>
 </div>
