@@ -8,14 +8,49 @@ module OpenProject::GwdgProjectGroups
           include InstanceMethods
           
           has_many :project_group_scopes
-          has_many :project_groups, :through => :project_group_scopes, :uniq => true
+          has_many :project_groups, -> { uniq }, :through => :project_group_scopes
           has_many :child_groups, :foreign_key => 'project_group_project_id', :class_name => 'ProjectGroup', :dependent => :destroy
   
           #XXX overrides default association
-          has_many :member_principals, :class_name => 'Member',
-                   :include => :principal,
-                   :conditions => "#{Principal.table_name}.type='ProjectGroup' OR #{Principal.table_name}.type='Group' OR (#{Principal.table_name}.type='User' AND #{Principal.table_name}.status=#{User::STATUSES[:active]})"
-  
+          # From the plugin
+          #has_many :member_principals, :class_name => 'Member',
+          #                             :include => :principal,
+          #                             :conditions => "#{Principal.table_name}.type='ProjectGroup' OR #{Principal.table_name}.type='Group' OR (#{Principal.table_name}.type='User' AND #{Principal.table_name}.status=#{User::STATUS_ACTIVE})"
+
+          # From ChiliProject
+          #has_many :member_principals, :class_name => 'Member',
+          #                             :include => :principal,
+          #                             :conditions => "#{Principal.table_name}.type='Group' OR (#{Principal.table_name}.type='User' AND #{Principal.table_name}.status=#{User::STATUS_ACTIVE})"
+          
+          # From OpenProject 4
+          #has_many :member_principals, class_name: 'Member',
+          #                             include: :principal,
+          #                             conditions: "#{Principal.table_name}.type='Group' OR " +
+          #                               "(#{Principal.table_name}.type='User' AND " +
+          #                               "(#{Principal.table_name}.status=#{User::STATUSES[:active]} OR " +
+          #                               "#{Principal.table_name}.status=#{User::STATUSES[:registered]}))"
+
+          # From OpenProject 5
+          #has_many :member_principals, -> {
+          #  includes(:principal)
+          #    .where("#{Principal.table_name}.type='Group' OR " +
+          #    "(#{Principal.table_name}.type='User' AND " +
+          #    "(#{Principal.table_name}.status=#{Principal::STATUSES[:active]} OR " +
+          #    "#{Principal.table_name}.status=#{Principal::STATUSES[:registered]} OR " +
+          #    "#{Principal.table_name}.status=#{Principal::STATUSES[:invited]}))")
+          #}, class_name: 'Member'
+
+          has_many :member_principals, -> {
+            includes(:principal)
+              .where("#{Principal.table_name}.type='ProjectGroup' OR " + 
+              "#{Principal.table_name}.type='Group' OR " +
+              "(#{Principal.table_name}.type='User' AND " +
+              "(#{Principal.table_name}.status=#{Principal::STATUSES[:active]} OR " +
+              "#{Principal.table_name}.status=#{Principal::STATUSES[:registered]} OR " +
+              "#{Principal.table_name}.status=#{Principal::STATUSES[:invited]}))")
+          }, class_name: 'Member'
+
+
           alias_method_chain :set_parent!, :gwdg_project_groups
 
 
@@ -34,7 +69,7 @@ module OpenProject::GwdgProjectGroups
             if p.to_s.blank?
               p = nil
             else
-              p = Project.find_by_id(p)
+              p = Project.find_by(id: p)
             end
           end
   

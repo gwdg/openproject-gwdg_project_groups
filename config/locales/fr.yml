@@ -3,4 +3,9 @@ fr:
   field_name: "Nom"
   label_group: "Groupe"
   label_project: "Projet"
+  projects:
+    settings:
+      project_groups:
+        no_results_title_text: "Il n'y a pas de groupes de projet qui appartiennent à ce projet."
+        no_results_content_text: "Ajouter un groupe de projet au projet"
   

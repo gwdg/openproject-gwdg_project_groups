@@ -18,18 +18,22 @@ module OpenProject::GwdgProjectGroups
           
           # From the plugin
           #@groups = Group.global_only.find(:all, :order => 'lastname')
-          
+
           # From ChiliProject
           #@groups = Group.find(:all, :order => 'lastname')
-          
-          # From OpenProject
+
+          # From OpenProject 4
           #@groups = Group.order('lastname ASC').all
+
+          # From OpenProject 5
+          #@groups = Group.order('lastname ASC')
+
+          #index_without_gwdg_project_groups
+          @groups = Group.global_only.order('lastname ASC')
       
-          @groups = Group.global_only.order('lastname ASC').all
-          
           respond_to do |format|
             format.html # index.html.erb
-            format.xml  { render xml: @groups }
+            format.xml do render xml: @groups end
           end
 
         end

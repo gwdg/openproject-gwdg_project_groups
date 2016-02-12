@@ -3,10 +3,8 @@ class ProjectGroup < Group
   unloadable
 
   has_many :project_group_scopes, :dependent => :destroy
-  has_many :projects, :through => :project_group_scopes, :uniq => true
+  has_many :projects, -> { uniq }, :through => :project_group_scopes
   belongs_to :parent_project, :foreign_key => 'project_group_project_id', :class_name => 'Project'
-
-  attr_protected :parent_project
 
   validates_presence_of :parent_project
 

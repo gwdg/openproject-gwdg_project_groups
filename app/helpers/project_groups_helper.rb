@@ -32,32 +32,52 @@ module ProjectGroupsHelper
   
   
   
-  #Not needed, they are the same as in the view
+  #Not needed, it is the same as in the view (or controller in OP5)
   def load_roles(project)
     Role.find_all_givable
   end
 
+  #Not needed, it is the same as in the view (or controller in OP5)
   def load_members(project)
     # In chiliProject
     #project.member_principals.find(:all, :include => [:roles, :principal]).sort
     
-    # In OpenProject
-    @project.member_principals.includes(:roles, :principal, :member_roles)
-                                        .order(User::USER_FORMATS_STRUCTURE[Setting.user_format].map{|attr| attr.to_s}.join(", "))
-                                        .page(params[:page])
-                                        .per_page(per_page_param)
+    # In OpenProject 4
+    #@project.member_principals.includes(:roles, :principal, :member_roles)
+    #                                    .order(User::USER_FORMATS_STRUCTURE[Setting.user_format].map{|attr| attr.to_s}.join(", "))
+    #                                    .page(params[:page])
+    #                                    .per_page(per_page_param)
+    
+    # In OpenProject 5
+    order = User::USER_FORMATS_STRUCTURE[Setting.user_format].map(&:to_s).join(', ')
+
+    project
+      .member_principals
+      .includes(:roles, :principal, :member_roles)
+      .order(order)
+      .page(params[:page])
+      .references(:users)
+      .per_page(per_page_param)
   end
 
+  # This is now in MembersController in OpenProject 5
+  #  The patch to the controller will call this function
   def load_principals(project)
     # In ChiliProject
-    #principals = Principal.active.find(:all, :limit => 100, :order => 'type, login, lastname ASC') - project.principals
+    #principals = Principal.active.find(:all, :limit => 100, :order => 'type, login, lastname ASC') - @project.principals
     
-    #In OpenProject
-    principals = @project.possible_members("", 1)
+    # In plugin
+    #Principal.active.find(:all, :limit => 100, :order => 'type, login, lastname ASC') - project.principals
+    #project.project_groups - project.principals + principals((the normal))
+    
+    #In OpenProject 4
+    #principals = @project.possible_members("", 1)
+
+    #In OpenProject 5
+    principals = @project.possible_members('', 1)
     
     # Plus patch
     project.project_groups - project.principals + principals
   end
 
-  
 end

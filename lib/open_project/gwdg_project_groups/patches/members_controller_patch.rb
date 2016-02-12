@@ -12,7 +12,8 @@ module OpenProject::GwdgProjectGroups
 
           helper ProjectGroupsHelper
 
-	  alias_method_chain :autocomplete_for_member, :gwdg_project_groups
+          alias_method_chain :autocomplete_for_member, :gwdg_project_groups
+          alias_method_chain :set_roles_and_principles!, :gwdg_project_groups
         end
       end
 
@@ -32,13 +33,46 @@ module OpenProject::GwdgProjectGroups
         #  render :layout => false
         #end
 
+        # From OpenProject 4
+        #def autocomplete_for_member
+        #  size = params[:page_limit].to_i || 10
+        #  page = params[:page]
+        #
+        #  if page
+        #    page = page.to_i
+        #    @principals = Principal.paginate_scope!(Principal.search_scope_without_project(@project, params[:q]),
+        #                                            page: page, page_limit: size)
+        #    # we always get all the items on a page, so just check if we just got the last
+        #    @more = @principals.total_pages > page
+        #    @total = @principals.total_entries
+        #  else
+        #    @principals = Principal.possible_members(params[:q], 100) - @project.principals
+        #  end
+        #
+        #  respond_to do |format|
+        #    format.json
+        #    format.html {
+        #      if request.xhr?
+        #        partial = 'members/autocomplete_for_member'
+        #      else
+        #        partial = 'members/member_form'
+        #      end
+        #      render partial: partial,
+        #             locals: { project: @project,
+        #                       principals: @principals,
+        #                       roles: Role.find_all_givable }
+        #    }
+        #  end
+        #end
+
+        #From OpenProject 5
         def autocomplete_for_member_with_gwdg_project_groups
           size = params[:page_limit].to_i || 10
           page = params[:page]
       
           if page
             page = page.to_i
-            #This code is missing in the next line according to the plugin: @project.project_groups.like(params[:q]) + 
+            #MabEntwickeltSich: This code is missing in the next line according to the plugin, but i do not know how to include it (check "else" block): @project.project_groups.like(params[:q]) + 
             @principals = Principal.paginate_scope!(Principal.search_scope_without_project(@project, params[:q]),
                                                     page: page, page_limit: size)
             # we always get all the items on a page, so just check if we just got the last
@@ -48,9 +82,13 @@ module OpenProject::GwdgProjectGroups
             @principals = @project.project_groups.like(params[:q]) + Principal.possible_members(params[:q], 100) - @project.principals
           end
       
+          @email = suggest_invite_via_email? current_user,
+                                             params[:q],
+                                             (@principals | @project.principals)
+      
           respond_to do |format|
             format.json
-            format.html {
+            format.html do
               if request.xhr?
                 partial = 'members/autocomplete_for_member'
               else
@@ -60,8 +98,15 @@ module OpenProject::GwdgProjectGroups
                      locals: { project: @project,
                                principals: @principals,
                                roles: Role.find_all_givable }
-            }
+            end
           end
+        end
+
+        # From OpenProject 5
+        def set_roles_and_principles_with_gwdg_project_groups!
+          @roles = Role.find_all_givable
+          # Check if there is at least one principal that can be added to the project
+          @principals_available = load_principals(@project)
         end
 
 

@@ -27,7 +27,7 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<%= labelled_tabular_form_for @project_group, :url => project_group_path(@project, @project_group), :html => {:method => :put}, :as => :project_group do |f| %>
-  <%= render :partial => 'form', :locals => { :f => f } %>
-  <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-yes' %>
+<%= labelled_tabular_form_for @project_group, url: project_group_path(@project, @project_group), html: {method: :put}, as: :project_group do |f| %>
+  <%= render partial: 'form', locals: { f: f } %>
+  <%= styled_button_tag l(:button_save), class: '-highlight -with-icon icon-checkmark' %>
 <% end %>

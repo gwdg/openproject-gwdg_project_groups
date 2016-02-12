@@ -1,37 +1,116 @@
-<div class="contextual">
-  <%= link_to l(:label_group_new), new_project_group_path(@project), :class => 'icon icon-add' %>
-</div>
+<%#-- copyright
+OpenProject is a project management system.
+Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See doc/COPYRIGHT.rdoc for more details.
+
+++#%>
 <% if @project_groups.any? %>
-    <table class="list groups clearfix">
-      <thead>
-      <tr>
-        <th><%= l(:label_group) %></th>
-        <th><%= l(:label_project) %></th>
-        <th><%= l(:label_user_plural) %></th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @project_groups.each do |group| %>
-          <tr class="<%= cycle 'odd', 'even' %>">
-            <td>
-              <% if group.is_child_of?(@project) %>
-                  <%= link_to h(group), edit_project_group_path(@project, group) %>
-              <% else %>
-                  <%= link_to h(group), project_group_path(@project, group), :class => 'icon icon-lock' %>
-              <% end %>
-            </td>
-            <td><%= link_to group.parent_project, project_path(group.parent_project) %></td>
-            <td align="centegrr"><%= group.users.size %></td>
-            <td class="buttons">
-              <% if group.is_child_of?(@project) %>
-                  <%= link_to l(:button_delete), project_group_path(@project, group), :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %>
-              <% end %>
-            </td>
-          </tr>
+  <fieldset class="form--fieldset">
+    <legend class="form--fieldset-legend">
+      <%= "Available project groups" %>
+    </legend>
+    <div class="generic-table--container">
+      <div class="generic-table--results-container">
+        <table interactive-table class="generic-table">
+          <colgroup>
+            <col highlight-col>
+            <col highlight-col>
+            <col highlight-col>
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>
+                <div class="generic-table--sort-header-outer">
+                  <div class="generic-table--sort-header">
+                    <span>
+                      <%= l(:label_group) %>
+                    </span>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="generic-table--sort-header-outer">
+                  <div class="generic-table--sort-header">
+                    <span>
+                      <%= l(:label_project) %>
+                    </span>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="generic-table--sort-header-outer">
+                  <div class="generic-table--sort-header">
+                    <span>
+                      <%= l(:label_user_plural) %>
+                    </span>
+                  </div>
+                </div>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for group in @project_groups.sort %>
+              <tr class="group">
+                <td class="name">
+                  <% if group.is_child_of?(@project) %>
+                    <%= link_to h(group),
+                                     edit_project_group_path(@project, group) %>
+                  <% else %>
+                    <%= link_to h(group),
+                                     project_group_path(@project, group),
+                                     class: "icon icon-locked" %>
+                  <% end %>
+                </td>
+                <td class="parent_project"><%= link_to group.parent_project, project_path(group.parent_project) %></td>
+                <td class="size"><%= group.users.size %></td>
+                <td class="buttons">
+                  <% if group.is_child_of?(@project) %>
+                    <%= link_to l(:button_delete),
+                                              project_group_path(@project, group),
+                                              data: { confirm: l(:text_are_you_sure) },
+                                              method: :delete,
+                                              class: 'icon icon-delete' %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <div class="generic-table--header-background"></div>
+      </div>
+    </div>
+    <div class="generic-table--action-buttons">
+      <%= link_to_if_authorized({ controller: '/project_groups', action: 'new', project_id: @project },
+                            class: 'button -alt-highlight') do %>
+        <i class="button--icon icon-add"></i>
+        <span class="button--text"><%= l(:label_group_new) %></span>
       <% end %>
-      </table>
-<% else %>
-    <p class="nodata clearfix"><%= l(:label_no_data) %></p>
-<% end %>
+    </div>
+  <% else %>
+    <%= no_results_box(action_url: { controller: '/project_groups', action: 'new', project_id: @project }, display_action: authorize_for(:project_groups, :new)) %>
+  <% end %>
+</fieldset>

@@ -27,6 +27,6 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<% html_title l(:label_administration), "#{l(:label_edit)} #{ProjectGroup.model_name.human} #{h @project_group.name}" %>
-<%= toolbar title: "#{link_to_project_settings(@project)} &raquo; #{l(:label_group_plural)} &raquo; #{@project_group.name}" %>
+<% html_title @project, "#{l(:label_edit)} #{ProjectGroup.model_name.human} #{h @project_group.name}" %>
+<%= breadcrumb_toolbar link_to_project_settings(@project), l(:label_group_plural), @project_group.name %>
 <%= render_tabs project_group_settings_tabs %>

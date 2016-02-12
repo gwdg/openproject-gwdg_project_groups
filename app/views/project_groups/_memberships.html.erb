@@ -29,32 +29,65 @@ See doc/COPYRIGHT.rdoc for more details.
 <div class="grid-block">
   <div class="grid-content">
     <h3><%= l(:label_role_plural) %></h3>
-  <% if @project_group.memberships.any? %>
-    <table class="list memberships">
-      <thead>
-        <tr>
-          <th><%= Project.model_name.human %></th>
-          <th><%= l(:label_role_plural) %></th>
-          <th style="width:15%"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @project_group.memberships.each do |membership| %>
-
-            <tr id="member-<%= membership.id %>" class="<%= cycle 'odd', 'even' %> class">
-              <td class="project"><%=h membership.project %></td>
-              <td class="roles">
-                <span id="member-<%= membership.id %>-roles"><%=h membership.roles.sort.collect(&:to_s).join(', ') %></span>
-              </td>
-            </tr>
-
-        <% end; reset_cycle %>
-          </tbody>
-      </table>
+    <% if @project_group.memberships.any? %>
+      <div class="generic-table--container">
+        <div class="generic-table--results-container">
+          <table interactive-table class="generic-table memberships">
+            <colgroup>
+              <col highlight-col>
+              <col highlight-col>
+              <col>
+            </colgroup>
+            <thead>
+              <tr>
+                <th>
+                  <div class="generic-table--sort-header-outer">
+                    <div class="generic-table--sort-header">
+                      <span>
+                        <%= Project.model_name.human %>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+                <th>
+                  <div class="generic-table--sort-header-outer">
+                    <div class="generic-table--sort-header">
+                      <span>
+                        <%= l(:label_role_plural) %>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @project_group.memberships.each do |membership| %>
+                  <tr id="member-<%= membership.id %>" class="class">
+                    <td class="project"><%=h membership.project %></td>
+                    <td class="roles">
+                      <span id="member-<%= membership.id %>-roles"><%=h membership.roles.sort.collect(&:to_s).join(', ') %></span>
+                    </td>
+                  </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="generic-table--header-background"></div>
+        </div>
+      </div>
     <% else %>
-      <p class="nodata"><%= l(:label_no_data) %></p>
+      <%= no_results_box %>
     <% end %>
   </div>
   <div class="grid-content">
+    <h3><%= l(:label_project_plural) %></h3>
+
+    <ul>
+      <% @project_group.projects.each do |project| %>
+        <li>
+          <%= link_to h(project), project %>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </div>

@@ -5,17 +5,17 @@ module OpenProject::GwdgProjectGroups
         base.class_eval do
           unloadable
 
-          scope :global_only, :conditions => {:type => 'Group'}
-  
-          _validate_callbacks.reject! do |c|
-            begin
-              if Proc === c.method && eval("attrs", c.method.binding).first == :lastname && c.options[:case_sensitive] == false
-                true
-              end
-            rescue
-              false
-            end
-          end
+          # Replaces standard uniqueness validation for lastname
+          # with validation scoped by project_group_project_id
+
+          scope :global_only, -> { where type: 'Group'}
+
+          #MabEntwickeltSich: Needs to be activated the next section of code to remove the validation
+          # http://stackoverflow.com/questions/7545938/how-to-remove-validation-using-instance-eval-clause-in-rails
+#          _validators[:lastname]
+#            .find { |v| v.is_a? ActiveRecord::Validations::UniquenessValidator }
+#            .attributes
+#            .delete(:lastname)
   
           validates_uniqueness_of :lastname, :case_sensitive => false, :scope => :project_group_project_id
 
