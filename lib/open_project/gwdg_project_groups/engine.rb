@@ -20,7 +20,7 @@ module OpenProject::GwdgProjectGroups
              
     config.to_prepare do 
       [ 
-        :group, :groups_controller, :members_controller, :project, :projects_controller, :projects_helper#, :permitted_params
+        :group, :groups_controller, :members_controller, :project, :projects_controller, :projects_helper, :principal#, :permitted_params
       ].each do |sym|
         require_dependency "open_project/gwdg_project_groups/patches/#{sym}_patch"
       end

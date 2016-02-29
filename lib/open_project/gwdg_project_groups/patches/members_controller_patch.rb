@@ -72,20 +72,19 @@ module OpenProject::GwdgProjectGroups
       
           if page
             page = page.to_i
-            #MabEntwickeltSich: This code is missing in the next line according to the plugin, but i do not know how to include it (check "else" block): @project.project_groups.like(params[:q]) + 
             @principals = Principal.paginate_scope!(Principal.search_scope_without_project(@project, params[:q]),
                                                     page: page, page_limit: size)
             # we always get all the items on a page, so just check if we just got the last
             @more = @principals.total_pages > page
             @total = @principals.total_entries
           else
-            @principals = @project.project_groups.like(params[:q]) + Principal.possible_members(params[:q], 100) - @project.principals
+            @principals = @project.project_groups.like(params[:q]) + Principal.possible_members_without_project_groups(params[:q], 100) - @project.principals
           end
-      
+
           @email = suggest_invite_via_email? current_user,
                                              params[:q],
                                              (@principals | @project.principals)
-      
+
           respond_to do |format|
             format.json
             format.html do

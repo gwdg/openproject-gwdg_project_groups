@@ -8,8 +8,8 @@ module OpenProject::GwdgProjectGroups
           include InstanceMethods
           
           has_many :project_group_scopes
-          has_many :project_groups, -> { uniq }, :through => :project_group_scopes
-          has_many :child_groups, :foreign_key => 'project_group_project_id', :class_name => 'ProjectGroup', :dependent => :destroy
+          has_many :project_groups, -> { uniq }, through: :project_group_scopes
+          has_many :child_groups, foreign_key: 'project_group_project_id', class_name: 'ProjectGroup', dependent: :destroy
   
           #XXX overrides default association
           # From the plugin
@@ -42,7 +42,7 @@ module OpenProject::GwdgProjectGroups
 
           has_many :member_principals, -> {
             includes(:principal)
-              .where("#{Principal.table_name}.type='ProjectGroup' OR " + 
+              .where("#{Principal.table_name}.type='ProjectGroup' OR " +
               "#{Principal.table_name}.type='Group' OR " +
               "(#{Principal.table_name}.type='User' AND " +
               "(#{Principal.table_name}.status=#{Principal::STATUSES[:active]} OR " +

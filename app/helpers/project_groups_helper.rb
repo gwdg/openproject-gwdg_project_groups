@@ -74,7 +74,7 @@ module ProjectGroupsHelper
     #principals = @project.possible_members("", 1)
 
     #In OpenProject 5
-    principals = @project.possible_members('', 1)
+    principals = @project.possible_members_without_project_groups('', 1)
     
     # Plus patch
     project.project_groups - project.principals + principals
