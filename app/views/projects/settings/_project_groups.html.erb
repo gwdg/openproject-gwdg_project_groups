@@ -26,6 +26,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
+<%#--Fom the original app/views/groups/index.html.erb++#%>
+
 <% if @project_groups.any? %>
   <fieldset class="form--fieldset">
     <legend class="form--fieldset-legend">
@@ -77,23 +79,16 @@ See doc/COPYRIGHT.rdoc for more details.
               <tr class="group">
                 <td class="name">
                   <% if group.is_child_of?(@project) %>
-                    <%= link_to h(group),
-                                     edit_project_group_path(@project, group) %>
+                    <%= link_to h(group), edit_project_group_path(@project, group) %>
                   <% else %>
-                    <%= link_to h(group),
-                                     project_group_path(@project, group),
-                                     class: "icon icon-locked" %>
+                    <%= link_to h(group), project_group_path(@project, group), class: "icon icon-locked" %>
                   <% end %>
                 </td>
                 <td class="parent_project"><%= link_to group.parent_project, project_path(group.parent_project) %></td>
                 <td class="size"><%= group.users.size %></td>
                 <td class="buttons">
                   <% if group.is_child_of?(@project) %>
-                    <%= link_to l(:button_delete),
-                                              project_group_path(@project, group),
-                                              data: { confirm: l(:text_are_you_sure) },
-                                              method: :delete,
-                                              class: 'icon icon-delete' %>
+                    <%= link_to l(:button_delete), project_group_path(@project, group), data: { confirm: l(:text_are_you_sure) }, method: :delete, class: 'icon icon-delete' %>
                   <% end %>
                 </td>
               </tr>
@@ -111,6 +106,7 @@ See doc/COPYRIGHT.rdoc for more details.
       <% end %>
     </div>
   <% else %>
-    <%= no_results_box(action_url: { controller: '/project_groups', action: 'new', project_id: @project }, display_action: authorize_for(:project_groups, :new)) %>
+    <%= no_results_box(action_url: { controller: '/project_groups', action: 'new', project_id: @project },
+                       display_action: authorize_for(:project_groups, :new)) %>
   <% end %>
 </fieldset>

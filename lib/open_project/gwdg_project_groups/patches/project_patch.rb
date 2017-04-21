@@ -6,11 +6,11 @@ module OpenProject::GwdgProjectGroups
           unloadable
 
           include InstanceMethods
-          
+
           has_many :project_group_scopes
           has_many :project_groups, -> { uniq }, through: :project_group_scopes
           has_many :child_groups, foreign_key: 'project_group_project_id', class_name: 'ProjectGroup', dependent: :destroy
-  
+
           #XXX overrides default association
           # From the plugin
           #has_many :member_principals, :class_name => 'Member',
@@ -21,7 +21,7 @@ module OpenProject::GwdgProjectGroups
           #has_many :member_principals, :class_name => 'Member',
           #                             :include => :principal,
           #                             :conditions => "#{Principal.table_name}.type='Group' OR (#{Principal.table_name}.type='User' AND #{Principal.table_name}.status=#{User::STATUS_ACTIVE})"
-          
+
           # From OpenProject 4
           #has_many :member_principals, class_name: 'Member',
           #                             include: :principal,
@@ -57,10 +57,10 @@ module OpenProject::GwdgProjectGroups
         end
 
       end
-      
+
       module InstanceMethods
 
-  
+
         # Overrides Project#set_parent!
         # Executes rebuild_groups_hierarchy
         def set_parent_with_gwdg_project_groups!(p)
@@ -72,21 +72,21 @@ module OpenProject::GwdgProjectGroups
               p = Project.find_by(id: p)
             end
           end
-  
+
           new_parent = p
           old_parent = parent
-  
+
           success = set_parent_without_gwdg_project_groups!(p)
-  
-          return false unless success
-          return success if new_parent == old_parent
-  
+
+          return false unless success #Returns false if set_parent_without_gwdg_project_groups! fails
+          return success if new_parent == old_parent #Returns true if hierarchy is completed
+
           ActiveRecord::Base.transaction do
             rebuild_group_hierarchy!
           end
           true
         end
-  
+
         # Projects cannot be moved to their descendants, so we are concerned only about parent's groups (add them)
         # and groups inherited from parent (remove them)
         #
@@ -101,11 +101,11 @@ module OpenProject::GwdgProjectGroups
             child.rebuild_group_hierarchy!
           end
         end
-  
+
         # Removes all project_groups which aren't owned by this project
         def remove_foreign_groups!
           return if project_groups.empty?
-  
+
           cond_str = 'project_id = ?'
           cond = [id]
           if child_groups.any?
@@ -120,10 +120,10 @@ module OpenProject::GwdgProjectGroups
           return if parent.nil? or parent.project_groups.empty?
           #cmp = project_group_ids - parent.project_group_ids #=> []
           #return if cmp.empty?
-    
+
           project_groups << parent.project_groups
         end
-    
+
         # Removes all child groups from given descendants
         # @deprecated
         def remove_groups_from_descendants!(descendant_ids)
@@ -131,7 +131,7 @@ module OpenProject::GwdgProjectGroups
             ProjectGroupScope.delete_all(['project_id = ? AND project_group_id IN (?)', descendant_ids, child_group_ids])
           end
         end
-    
+
         # Add our child_groups to each descendant
         # See also ProjectGroup#add_to_descendants
         # @deprecated
@@ -144,7 +144,7 @@ module OpenProject::GwdgProjectGroups
 
       end
 
-            
+
     end
   end
 end

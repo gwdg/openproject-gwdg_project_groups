@@ -2,6 +2,7 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 require 'open_project/gwdg_project_groups/version'
+
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "openproject-gwdg_project_groups"

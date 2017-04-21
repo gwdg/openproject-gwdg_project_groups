@@ -9,8 +9,8 @@ module OpenProject::GwdgProjectGroups
     include OpenProject::Plugins::ActsAsOpEngine
 
     register 'openproject-gwdg_project_groups',
-             :author_url => 'http://www.gwdg.de',
-             :requires_openproject => '>= 3.0.0pre13' do
+             author_url: 'http://www.gwdg.de',
+             requires_openproject: '= 5.0.20' do
                #Commented the next line to make the tab "Groups "appear
                #project_module :gwdg_project_groups_module do
                  permission :manage_project_groups, {project_groups: [:show, :new, :edit, :create, :update, :destroy, :add_users, :remove_user, :autocomplete_for_user]}, require: :member

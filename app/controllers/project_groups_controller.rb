@@ -58,7 +58,7 @@ class ProjectGroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.xml
   def new
-  @project_group = ProjectGroup.new(projects: [@project])
+    @project_group = ProjectGroup.new(projects: [@project])
 
 
 
@@ -115,6 +115,7 @@ class ProjectGroupsController < ApplicationController
     @project_group.destroy
 
     respond_to do |format|
+      flash[:notice] = l(:notice_successful_delete)
       format.html do redirect_to(controller: "projects", action: "settings", id: @project, tab: "project_groups") end
       format.xml  do head :ok end
     end
@@ -126,8 +127,7 @@ class ProjectGroupsController < ApplicationController
     @project_group.users << @users
     respond_to do |format|
       format.html do redirect_to edit_project_group_path(@project, @project_group, tab: 'users') end
-      format.js   do load_users; render action: 'change_members'
-      end
+      format.js   do load_users; render action: 'change_members' end
     end
   end
 
@@ -136,8 +136,7 @@ class ProjectGroupsController < ApplicationController
     @project_group.users.delete(User.find(params[:user_id]))
     respond_to do |format|
       format.html do redirect_to controller: '/project_groups', action: 'edit', id: @project_group, tab: 'users' end
-      format.js   do load_users; render action: 'change_members'
-      end
+      format.js   do load_users; render action: 'change_members' end
     end
   end
 

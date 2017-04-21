@@ -18,7 +18,7 @@ module OpenProject::GwdgProjectGroups
       end
 
       module InstanceMethods
-        
+
         # From ChiliProject
         #def autocomplete_for_member
         #  @principals = Principal.active.like(params[:q]).find(:all, :limit => 100) - @project.principals
@@ -66,10 +66,46 @@ module OpenProject::GwdgProjectGroups
         #end
 
         #From OpenProject 5
+        #def autocomplete_for_member
+        #  size = params[:page_limit].to_i || 10
+        #  page = params[:page]
+        #
+        #  if page
+        #    page = page.to_i
+        #    @principals = Principal.paginate_scope!(Principal.search_scope_without_project(@project, params[:q]),
+        #                                            page: page, page_limit: size)
+        #    # we always get all the items on a page, so just check if we just got the last
+        #    @more = @principals.total_pages > page
+        #    @total = @principals.total_entries
+        #  else
+        #    @principals = Principal.possible_members(params[:q], 100) - @project.principals
+        #  end
+        #
+        #  @email = suggest_invite_via_email? current_user,
+        #                                     params[:q],
+        #                                     (@principals | @project.principals)
+        #
+        #  respond_to do |format|
+        #    format.json
+        #    format.html do
+        #      if request.xhr?
+        #        partial = 'members/autocomplete_for_member'
+        #      else
+        #        partial = 'members/member_form'
+        #      end
+        #      render partial: partial,
+        #             locals: { project: @project,
+        #                       principals: @principals,
+        #                       roles: Role.find_all_givable }
+        #    end
+        #  end
+        #end
+
+        #From OpenProject 5
         def autocomplete_for_member_with_gwdg_project_groups
           size = params[:page_limit].to_i || 10
           page = params[:page]
-      
+
           if page
             page = page.to_i
             @principals = Principal.paginate_scope!(Principal.search_scope_without_project(@project, params[:q]),
@@ -105,7 +141,9 @@ module OpenProject::GwdgProjectGroups
         def set_roles_and_principles_with_gwdg_project_groups!
           @roles = Role.find_all_givable
           # Check if there is at least one principal that can be added to the project
-          @principals_available = load_principals(@project)
+          principals = @project.possible_members('', 1)
+          # Plus patch
+          @principals_available = @project.project_groups - @project.principals + principals
         end
 
 
