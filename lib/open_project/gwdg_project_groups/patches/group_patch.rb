@@ -16,9 +16,14 @@ module OpenProject::GwdgProjectGroups
       end
 
       module InstanceMethods
+        
         # Replaces standard uniqueness validation for lastname
         # with validation scoped by project_group_project_id
         def uniqueness_of_groupname_with_gwdg_project_groups
+
+          # From OpenProject 5
+          #groups_with_name = Group.where('lastname = ? AND id <> ?', groupname, id ? id : 0).count
+
           if project_group_project_id != nil
             groups_with_name = Group.where('project_group_project_id = ? AND lastname = ? AND id <> ?', project_group_project_id, groupname, id ? id : 0).count
           else

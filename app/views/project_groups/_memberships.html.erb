@@ -26,9 +26,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
+<% projects = @project_group.projects %>
+
 <div class="grid-block">
   <div class="grid-content">
-    <h3><%= l(:label_role_plural) %></h3>
     <% if @project_group.memberships.any? %>
       <div class="generic-table--container">
         <div class="generic-table--results-container">
@@ -63,6 +64,7 @@ See doc/COPYRIGHT.rdoc for more details.
             </thead>
             <tbody>
               <% @project_group.memberships.each do |membership| %>
+                <% next if membership.new_record? %>
                   <tr id="member-<%= membership.id %>" class="class">
                     <td class="project"><%=h membership.project %></td>
                     <td class="roles">
@@ -80,14 +82,19 @@ See doc/COPYRIGHT.rdoc for more details.
     <% end %>
   </div>
   <div class="grid-content">
-    <h3><%= l(:label_project_plural) %></h3>
-
-    <ul>
-      <% @project_group.projects.each do |project| %>
-        <li>
-          <%= link_to h(project), project %>
-        </li>
-      <% end %>
-    </ul>
+    <% if projects.any? %>
+      <fieldset class="form--fieldset">
+        <legend class="form--fieldset-legend"><%=l(:label_project_plural)%></legend>
+        <div class="form--field -vertical">
+          <div class="form--field-container -vertical">
+            <% projects.each do |project| %>
+              <li>
+                <%= link_to project, project_path(project), title: project.short_description %>
+              </li>
+            <% end %>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
   </div>
 </div>
