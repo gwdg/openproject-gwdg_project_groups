@@ -1,5 +1,5 @@
 module OpenProject
   module GwdgProjectGroups
-    VERSION = "6.0.0"
+    VERSION = "6.0.5"
   end
 end
