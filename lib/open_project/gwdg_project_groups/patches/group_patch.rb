@@ -21,7 +21,7 @@ module OpenProject::GwdgProjectGroups
         # with validation scoped by project_group_project_id
         def uniqueness_of_groupname_with_gwdg_project_groups
 
-          # From OpenProject 5
+          # From OpenProject 5. 6.0
           #groups_with_name = Group.where('lastname = ? AND id <> ?', groupname, id ? id : 0).count
 
           if project_group_project_id != nil

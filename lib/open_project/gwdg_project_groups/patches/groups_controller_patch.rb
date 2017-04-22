@@ -25,7 +25,7 @@ module OpenProject::GwdgProjectGroups
           # From OpenProject 4
           #@groups = Group.order('lastname ASC').all
 
-          # From OpenProject 5
+          # From OpenProject 5, 6.0
           #@groups = Group.order('lastname ASC')
 
           #index_without_gwdg_project_groups
