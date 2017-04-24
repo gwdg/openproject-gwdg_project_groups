@@ -12,7 +12,7 @@ module OpenProject::GwdgProjectGroups
 
           include InstanceMethods
 
-          before_filter :load_project_groups, :only => :settings
+          before_action :load_project_groups, :only => :settings
 
         end
       end

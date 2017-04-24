@@ -30,7 +30,7 @@ module OpenProject::GwdgProjectGroups
           #                               "(#{Principal.table_name}.status=#{User::STATUSES[:active]} OR " +
           #                               "#{Principal.table_name}.status=#{User::STATUSES[:registered]}))"
 
-          # From OpenProject 5, 6.0
+          # From OpenProject 5, 6.0, 6.1
           #has_many :member_principals, -> {
           #  includes(:principal)
           #    .where("#{Principal.table_name}.type='Group' OR " +
@@ -40,7 +40,7 @@ module OpenProject::GwdgProjectGroups
           #    "#{Principal.table_name}.status=#{Principal::STATUSES[:invited]}))")
           #}, class_name: 'Member'
 
-          # From OpenProject 5, 6.0
+          # From OpenProject 5, 6.0, 6.1
           has_many :member_principals, -> {
             includes(:principal)
               .where("#{Principal.table_name}.type='ProjectGroup' OR " +
@@ -66,13 +66,8 @@ module OpenProject::GwdgProjectGroups
         # Executes rebuild_groups_hierarchy
         def set_parent_with_gwdg_project_groups!(p)
           # Get the real object
-          unless p.nil? || p.is_a?(Project)
-            if p.to_s.blank?
-              p = nil
-            else
-              p = Project.find_by(id: p)
-            end
-          end
+          p = guarantee_project_or_nil_or_false(p)
+          return false if p == false # have to explicitly check for false
 
           new_parent = p
           old_parent = parent

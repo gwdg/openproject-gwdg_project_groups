@@ -8,7 +8,7 @@ module OpenProject::GwdgProjectGroups
           extend ClassMethods
           include InstanceMethods
 
-          # From OpenProject 5, 6.0
+          # From OpenProject 5, 6.0, 6.1
           #scope :active_or_registered, -> {
           #  where(status: [STATUSES[:active], STATUSES[:registered], STATUSES[:invited]])
           #}
@@ -19,7 +19,7 @@ module OpenProject::GwdgProjectGroups
             uniq
           }
 
-          # From OpenProject 5, 6.0
+          # From OpenProject 5, 6.0, 6.1
           #scope :not_in_project, ->(project) {
           #  where("id NOT IN (select m.user_id FROM members as m where m.project_id = #{project.id})")
           #}
@@ -29,13 +29,23 @@ module OpenProject::GwdgProjectGroups
             where("users.id NOT IN (select m.user_id FROM members as m where m.project_id = #{project.id})")
           }
 
+          # From OpenProject 6.1, not sure if has to be modified as the previous two scopes:
+          #scope :in_project, ->(project) {
+          #  projects = Array(project)
+          #  subquery = "SELECT DISTINCT user_id FROM members WHERE project_id IN (?)"
+          #  condition = ["#{Principal.table_name}.id IN (#{subquery})",
+          #               projects.map(&:id)]
+          #
+          #  where(condition)
+          #}
+
         end
 
       end
 
       module ClassMethods
 
-        # From OpenProject 5, 6.0
+        # From OpenProject 5, 6.0, 6.1
         #def self.possible_members(criteria, limit)
         #  Principal.active_or_registered_like(criteria).limit(limit)
         #end

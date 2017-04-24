@@ -30,10 +30,10 @@
 class ProjectGroupsController < ApplicationController
   unloadable
   model_object ProjectGroup
-  before_filter :find_project_by_project_id
-  before_filter :authorize
-  before_filter :find_model_object, :except => [:new, :create] #=> @project_group
-  before_filter :authorize_manageable, :except => [:new, :create, :show]
+  before_action :find_project_by_project_id
+  before_action :authorize
+  before_action :find_model_object, :except => [:new, :create] #=> @project_group
+  before_action :authorize_manageable, :except => [:new, :create, :show]
 
   # GET /groups
   # GET /groups.xml
