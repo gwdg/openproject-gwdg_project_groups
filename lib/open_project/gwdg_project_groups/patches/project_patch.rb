@@ -30,7 +30,7 @@ module OpenProject::GwdgProjectGroups
           #                               "(#{Principal.table_name}.status=#{User::STATUSES[:active]} OR " +
           #                               "#{Principal.table_name}.status=#{User::STATUSES[:registered]}))"
 
-          # From OpenProject 5, 6.0, 6.1, 7.0
+          # From OpenProject 5, 6.0, 6.1, 7.0, 7.1
           #has_many :member_principals, -> {
           #  includes(:principal)
           #    .where("#{Principal.table_name}.type='Group' OR " +
@@ -40,7 +40,7 @@ module OpenProject::GwdgProjectGroups
           #    "#{Principal.table_name}.status=#{Principal::STATUSES[:invited]}))")
           #}, class_name: 'Member'
 
-          # From OpenProject 5, 6.0, 6.1, 7.0
+          # From OpenProject 5, 6.0, 6.1, 7.0, 7.1
           has_many :member_principals, -> {
             includes(:principal)
               .where("#{Principal.table_name}.type='ProjectGroup' OR " +
