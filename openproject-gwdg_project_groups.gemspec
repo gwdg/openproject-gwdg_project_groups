@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*"] + %w(CHANGELOG.md README.md)
 
-  s.add_dependency "rails", ">= 5.0"
+  s.add_dependency "rails", ">= 5.0.3"
   
 end

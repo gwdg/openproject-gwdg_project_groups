@@ -27,7 +27,14 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-jQuery('#tab-content-users').html("<%= escape_javascript render(partial: 'project_groups/users') %>")
-<% @users.each do |user| %>
-  jQuery('#user-<%= user.id %>').effect("highlight", {}, 2000);
-<% end if @users.present? %>
+var tab = jQuery('#tab-content-users');
+<% content = escape_javascript render(partial: 'project_groups/users') %>
+var compiledContent = OpenProject.Helpers.Angular.compile('<%= content %>');
+
+tab.html(compiledContent);
+
+<% flash_message = escape_javascript render(partial: "members/common_notice",
+                                            locals: { message: l(:notice_successful_update) }) %>
+tab.prepend('<%= flash_message %>');
+
+autoHideFlashMessage();

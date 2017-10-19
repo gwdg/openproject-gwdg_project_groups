@@ -10,7 +10,7 @@ module OpenProject::GwdgProjectGroups
 
     register 'openproject-gwdg_project_groups',
              author_url: 'http://www.gwdg.de',
-             requires_openproject: '>= 6.1.0' do
+             requires_openproject: '>= 7.0.0' do
                #Commented the next line to make the tab "Groups "appear
                #project_module :gwdg_project_groups_module do
                  permission :manage_project_groups, {project_groups: [:show, :new, :edit, :create, :update, :destroy, :add_users, :remove_user, :autocomplete_for_user]}, require: :member

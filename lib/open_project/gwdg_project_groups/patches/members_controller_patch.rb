@@ -101,7 +101,7 @@ module OpenProject::GwdgProjectGroups
         #  end
         #end
 
-        # From OpenProject 6.1
+        # From OpenProject 6.1, 7.0
         #def autocomplete_for_member
         #  size = params[:page_limit].to_i || 10
         #  page = params[:page]
@@ -132,7 +132,7 @@ module OpenProject::GwdgProjectGroups
         #  end
         #end
 
-        # From OpenProject 6.1
+        # From OpenProject 6.1, 7.0
         def autocomplete_for_member_with_gwdg_project_groups
           size = params[:page_limit].to_i || 10
           page = params[:page]
@@ -163,14 +163,14 @@ module OpenProject::GwdgProjectGroups
           end
         end
 
-        # From OpenProject 5, 6.0, 6.1
+        # From OpenProject 5, 6.0, 6.1, 7.0
         #def set_roles_and_principles!
         #  @roles = Role.find_all_givable
         #  # Check if there is at least one principal that can be added to the project
         #  @principals_available = @project.possible_members('', 1)
         #end
 
-        # From OpenProject 5, 6.0, 6.1
+        # From OpenProject 5, 6.0, 6.1, 7.0
         def set_roles_and_principles_with_gwdg_project_groups!
           @roles = Role.find_all_givable
           # Check if there is at least one principal that can be added to the project

@@ -173,6 +173,18 @@ class ProjectGroupsController < ApplicationController
 
   end
 
+  def default_breadcrumb
+
+
+
+
+
+  end
+
+  def show_local_breadcrumb
+
+  end
+
   # Loads users not present in the group
   def load_users
     @users_not_in_group = User.active.not_in_group(@project_group).limit(100)

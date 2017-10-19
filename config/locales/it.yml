@@ -1,0 +1,11 @@
+it:
+  label_project_group: "Project groups"
+  field_name: "Name"
+  label_group: "Group"
+  label_project: "Project"
+  projects:
+    settings:
+      project_groups:
+        no_results_title_text: "There are currently no project groups part of this project."
+        no_results_content_text: "Add a project group to the project"
+  

@@ -34,7 +34,7 @@ See doc/COPYRIGHT.rdoc for more details.
             class: 'button -alt-highlight',
             aria: {label: t(:label_group_new)},
             title: t(:label_group_new)) do %>
-      <i class="button--icon icon-add"></i>
+      <%= op_icon('button--icon icon-add') %>
       <span class="button--text"><%= t('activerecord.models.group') %></span>
     <% end %>
   </li>
@@ -42,7 +42,7 @@ See doc/COPYRIGHT.rdoc for more details.
 <% if @project_groups.any? %>
   <div class="generic-table--container">
     <div class="generic-table--results-container">
-      <table interactive-table class="generic-table">
+      <table class="generic-table">
         <colgroup>
           <col highlight-col>
           <col highlight-col>
@@ -78,7 +78,7 @@ See doc/COPYRIGHT.rdoc for more details.
                 </div>
               </div>
             </th>
-            <th></th>
+            <th><div class="generic-table--empty-header"></div></th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +100,7 @@ See doc/COPYRIGHT.rdoc for more details.
           <% end %>
         </tbody>
       </table>
-      <div class="generic-table--header-background"></div>
+      
     </div>
   </div>
 <% else %>
