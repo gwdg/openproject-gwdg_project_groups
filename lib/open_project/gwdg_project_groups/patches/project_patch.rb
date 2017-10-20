@@ -40,7 +40,7 @@ module OpenProject::GwdgProjectGroups
           #    "#{Principal.table_name}.status=#{Principal::STATUSES[:invited]}))")
           #}, class_name: 'Member'
 
-          # From OpenProject 7.2
+          # From OpenProject 7.2, 7.3
           #has_many :member_principals,
           #         -> {
           #           includes(:principal)
@@ -53,7 +53,7 @@ module OpenProject::GwdgProjectGroups
           #         },
           #         class_name: 'Member'
 
-          # From OpenProject 7.2
+          # From OpenProject 7.2, 7.3
           has_many :member_principals,
                    -> {
                      includes(:principal)

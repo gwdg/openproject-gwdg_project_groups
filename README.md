@@ -1,7 +1,7 @@
-# OpenProject Gwdg Project Groups Plugin
+# OpenProject GWDG Project Groups Plugin
 
-FIXME Add description and check issue tracker link below
+OpenProject GWDG Project Groups plugin allows the creation of groups per project.
 
 ## Issue Tracker
 
-https://community.openproject.org/projects/gwdg-project-groups/work_packages
+https://github.com/gwdg/openproject-gwdg_project_groups/issues
